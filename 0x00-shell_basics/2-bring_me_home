@@ -1,3 +1,2 @@
 #!/bin/bash
-PATH=$HOME/home
-pwd
+cd
