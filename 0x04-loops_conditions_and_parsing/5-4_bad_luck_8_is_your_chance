@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # a script that print something when its 4 and 8.
-i=0
+i=1
 while [ $i -le 10 ]
 do
 	if [ $i == 4 ];then
