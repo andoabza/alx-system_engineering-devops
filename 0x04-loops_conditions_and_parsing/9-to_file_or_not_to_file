@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#check a file
+file=/alx-system_engineering-devops/0x04-loops_conditions_and_parsing/school
+if [ -e "$file" ];then
+	echo "$file file exists"
+else
+	echo "school file exists"
+fi
+if [ -s "$file" ];then
+	echo "$file file is not empty"
+else
+	echo "school file is empty"
+fi
+if [ -f "$file" ];then
+	echo "$file is a regular file"
+fi
