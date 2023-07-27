@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # a script that list in for loop
 for file in *; do
-   	 if [[ "$file" != .* && "$file" == *-* ]]
+   	 if [ $file == "$file" ]
     then
         echo "${file#*-}"
     fi
