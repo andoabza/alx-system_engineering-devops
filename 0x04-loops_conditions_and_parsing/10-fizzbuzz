@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# a script that print multiple of  3 and 5
+i=1
+while [ $i -le 100 ]
+do
+	if [ $((i % 3)) -eq 0 ];then
+	echo "fizz"
+	elif [  $((i % 5)) -eq 0 ];then
+	echo "buzz"
+	else
+	echo "$i"
+  	fi
+	((i++))
+done
