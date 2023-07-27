@@ -8,6 +8,9 @@ do
 	else
 	echo "Best School"
 	fi
+	if [ $i == 4 ];then
+	echo "$i"
+	fi
 	((i++))
 done
 

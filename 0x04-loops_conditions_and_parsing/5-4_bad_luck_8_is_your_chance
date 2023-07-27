@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# a script that print something when its 4 and 8.
+i=0
+while [ $i -le 10 ]
+do
+	if [ $i == 4 ];then
+	echo "bad luck"
+	elif [ $i == 8 ]
+	then
+	echo "good luck"
+	else
+	echo "Best School"
+	fi
+	((i++))
+done
