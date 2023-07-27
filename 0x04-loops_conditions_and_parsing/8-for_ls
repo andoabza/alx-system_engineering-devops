@@ -2,7 +2,7 @@
 # a script that list in for loop
 for file in *; do
     if [ -f "$file" ]; then
-        echo "$file"
+        echo "$file" | sed -e '1{' -e '/^$/d' -e 's/.-//' -e '}'
     fi
 done
 
