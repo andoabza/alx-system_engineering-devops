@@ -7,11 +7,15 @@ while [ $hour -le 12 ]
 do
 	while [ $i -le 60 ]
 	do
-	if [ $i == 59 ];then
-		i=0
+	if [ $i == 60 ];then
+		i=1
 		hour=$((hour + 1))
-		echo "Hour: $hour"
-	elif [ $hour -eq 12 ]
+		if [ $hour -eq 13 ];then
+			exit
+		else
+			echo "Hour: $hour"
+		fi
+	elif [ $hour -eq 13 ]
 	then
 	     exit  
      else
