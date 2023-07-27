@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# a script that print hi if 9 else Best school.
+i=1
+while [ $i -le 10 ]
+do
+	if [ $i == 9 ];then
+	echo "Hi"
+	else
+	echo "Best School"
+	fi
+	((i++))
+done
+
