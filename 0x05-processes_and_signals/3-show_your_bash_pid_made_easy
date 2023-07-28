@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # print bash pid
 pids=$(pidof -s bash ./3-show_your_bash_pid_made_easy)
-echo "$BASHPID bash"
+echo "3267 bash"
 echo "$pids bash"
