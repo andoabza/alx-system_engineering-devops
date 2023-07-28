@@ -2,5 +2,5 @@
 # a script that stop a program
 kil=$(pgrep -f "4-to_infinity_and_beyond")
 if [ -n "$kil" ];then
-	kill $kil
+	kill "$kil"
 fi
