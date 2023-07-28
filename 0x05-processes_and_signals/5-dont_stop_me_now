@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# a script that stop a program
+kill 4-to_infinity_and_beyond
