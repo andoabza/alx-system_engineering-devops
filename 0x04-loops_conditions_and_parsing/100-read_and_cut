@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# a script that display etc/passwd 
+FILENAME="/etc/passwd"
+while IFS=: read -r name x id n run mor no ;
+do
+  echo "$name:$id:$mor"
+done < $FILENAME
