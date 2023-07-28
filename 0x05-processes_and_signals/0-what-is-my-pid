@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# a script that print own pid
+echo "$BASHPID"
