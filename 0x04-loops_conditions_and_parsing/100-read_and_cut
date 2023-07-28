@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # a script that display etc/passwd 
 FILENAME="/etc/passwd"
+i=0
 while IFS=: read -r name x id n run mor no ;
 do
   echo "$name:$id:$mor"
+  if [ $i -eq 1 ];then
+	  echo " $x, $n, $run $no"
+  fi
 done < $FILENAME
