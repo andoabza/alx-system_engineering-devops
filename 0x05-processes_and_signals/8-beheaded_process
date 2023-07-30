@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# a script that stop a program
+kil=$(pgrep -f "7-highlander")
+if [ -n "$kil" ];then
+        kill -9 "$kil"
+fi
