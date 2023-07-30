@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 # a script that print pid of bash
 # shellcheck disable=SC2009
-pid=$(ps -eo pid,cmd | grep -E "bash\s*$" | awk '{print $1}')
-
-echo $pid
+ps -aux | grep bash
