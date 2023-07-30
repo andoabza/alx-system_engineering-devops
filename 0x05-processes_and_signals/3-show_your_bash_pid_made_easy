@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 # print bash pid
-pids=$(pgrep -f "3-show_your_bash_pid_made_easy")
-echo "$BASHPID bash"
-echo "$pids bash"
+#pids=$(pgrep -o bash)
+#echo "$pids bash"
+#echo "$BASHPID bash"
+process_list=$(find /proc -maxdepth 1 -type d -name "[0-9]*")
+
+# Iterate over each process directory
+for process_dir in $process_list; do
+    # Extract the process ID from the directory name
+    pid=$(basename "$process_dir")
+
+    # Check if the process name contains the word "bash"
+    if grep -q "bash" "/proc/$pid/cmdline" 2>/dev/null; then
+        # Retrieve the process name from the cmdline file
+        process_name=$(tr '\0' ' ' < "/proc/$pid/cmdline" | awk '{print $1}')
+
+        # Display the PID along with the process name
+        echo "$pid $process_name"
+    fi
+done
