@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # a script tht print i'm invicible
-trap "echo I am invincible!!!; exit" SIGTERM
+
 while :
 	do
 	echo "To infinity and beyond"
 	sleep 2
+	trap "echo I am invincible!!!" SIGTERM
 done
