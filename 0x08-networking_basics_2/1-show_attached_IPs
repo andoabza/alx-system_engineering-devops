@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# prints i4pv ips
+interface_names=$(ifconfig -s | awk 'NR>1{print $1}')
+for interface in $interface_names; do
+ ipv4_addresses=$(ifconfig $interface | awk '/inet /{print $2}')
+  echo "$ipv4_addresses"
+done
