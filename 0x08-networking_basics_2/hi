@@ -1,0 +1,279 @@
+NC(1)                                                      BSD General Commands Manual                                                      NC(1)
+
+NNAAMMEE
+     nncc — arbitrary TCP and UDP connections and listens
+
+SSYYNNOOPPSSIISS
+     nncc [--4466bbCCDDddFFhhkkllNNnnrrSSttUUuuvvZZzz] [--II _l_e_n_g_t_h] [--ii _i_n_t_e_r_v_a_l] [--MM _t_t_l] [--mm _m_i_n_t_t_l] [--OO _l_e_n_g_t_h] [--PP _p_r_o_x_y___u_s_e_r_n_a_m_e] [--pp _s_o_u_r_c_e___p_o_r_t] [--qq _s_e_c_o_n_d_s]
+        [--ss _s_o_u_r_c_e] [--TT _k_e_y_w_o_r_d] [--VV _r_t_a_b_l_e] [--WW _r_e_c_v_l_i_m_i_t] [--ww _t_i_m_e_o_u_t] [--XX _p_r_o_x_y___p_r_o_t_o_c_o_l] [--xx _p_r_o_x_y___a_d_d_r_e_s_s[:_p_o_r_t]] [_d_e_s_t_i_n_a_t_i_o_n] [_p_o_r_t]
+
+DDEESSCCRRIIPPTTIIOONN
+     The nncc (or nneettccaatt) utility is used for just about anything under the sun involving TCP, UDP, or UNIX-domain sockets.  It can open TCP con‐
+     nections, send UDP packets, listen on arbitrary TCP and UDP ports, do port scanning, and deal with both IPv4 and IPv6.  Unlike telnet(1), nncc
+     scripts nicely, and separates error messages onto standard error instead of sending them to standard output, as telnet(1) does with some.
+
+     Common uses include:
+
+           ••   simple TCP proxies
+           ••   shell-script based HTTP clients and servers
+           ••   network daemon testing
+           ••   a SOCKS or HTTP ProxyCommand for ssh(1)
+           ••   and much, much more
+
+     The options are as follows:
+
+     --44      Use IPv4 addresses only.
+
+     --66      Use IPv6 addresses only.
+
+     --bb      Allow broadcast.
+
+     --CC      Send CRLF as line-ending.  Each line feed (LF) character from the input data is translated into CR+LF before being written to the
+             socket.  Line feed characters that are already preceded with a carriage return (CR) are not translated.  Received data is not af‐
+             fected.
+
+     --DD      Enable debugging on the socket.
+
+     --dd      Do not attempt to read from stdin.
+
+     --FF      Pass the first connected socket using sendmsg(2) to stdout and exit.  This is useful in conjunction with --XX to have nncc perform con‐
+             nection setup with a proxy but then leave the rest of the connection to another program (e.g. ssh(1) using the ssh_config(5)
+             PPrrooxxyyUUsseeFFddppaassss option).  Cannot be used with --UU.
+
+     --hh      Print out the nncc help text and exit.
+
+     --II _l_e_n_g_t_h
+             Specify the size of the TCP receive buffer.
+
+     --ii _i_n_t_e_r_v_a_l
+             Sleep for _i_n_t_e_r_v_a_l seconds between lines of text sent and received.  Also causes a delay time between connections to multiple ports.
+
+     --kk      When a connection is completed, listen for another one.  Requires --ll.  When used together with the --uu option, the server socket is
+             not connected and it can receive UDP datagrams from multiple hosts.
+
+     --ll      Listen for an incoming connection rather than initiating a connection to a remote host.  The _d_e_s_t_i_n_a_t_i_o_n and _p_o_r_t to listen on can
+             be specified either as non-optional arguments, or with options --ss and --pp respectively.  Cannot be used together with --xx or --zz.  Ad‐
+             ditionally, any timeouts specified with the --ww option are ignored.
+
+     --MM _t_t_l  Set the TTL / hop limit of outgoing packets.
+
+     --mm _m_i_n_t_t_l
+             Ask the kernel to drop incoming packets whose TTL / hop limit is under _m_i_n_t_t_l.
+
+     --NN      shutdown(2) the network socket after EOF on the input.  Some servers require this to finish their work.
+
+     --nn      Do not do any DNS or service lookups on any specified addresses, hostnames or ports.
+
+     --OO _l_e_n_g_t_h
+             Specify the size of the TCP send buffer.
+
+     --PP _p_r_o_x_y___u_s_e_r_n_a_m_e
+             Specifies a username to present to a proxy server that requires authentication.  If no username is specified then authentication
+             will not be attempted.  Proxy authentication is only supported for HTTP CONNECT proxies at present.
+
+     --pp _s_o_u_r_c_e___p_o_r_t
+             Specify the source port nncc should use, subject to privilege restrictions and availability.
+
+     --qq _s_e_c_o_n_d_s
+             after EOF on stdin, wait the specified number of _s_e_c_o_n_d_s and then quit. If _s_e_c_o_n_d_s is negative, wait forever (default).  Specifying
+             a non-negative _s_e_c_o_n_d_s implies --NN.
+
+     --rr      Choose source and/or destination ports randomly instead of sequentially within a range or in the order that the system assigns them.
+
+     --SS      Enable the RFC 2385 TCP MD5 signature option.
+
+     --ss _s_o_u_r_c_e
+             Send packets from the interface with the _s_o_u_r_c_e IP address.  For UNIX-domain datagram sockets, specifies the local temporary socket
+             file to create and use so that datagrams can be received.  Cannot be used together with --xx.
+
+     --TT _k_e_y_w_o_r_d
+             Change the IPv4 TOS/IPv6 traffic class value.  _k_e_y_w_o_r_d may be one of ccrriittiiccaall, iinneettccoonnttrrooll, lloowwccoosstt, lloowwddeellaayy, nneettccoonnttrrooll,
+             tthhrroouugghhppuutt, rreelliiaabbiilliittyy, or one of the DiffServ Code Points: eeff, aaff1111 ... aaff4433, ccss00 ... ccss77; or a number in either hex or decimal.
+
+     --tt      Send RFC 854 DON'T and WON'T responses to RFC 854 DO and WILL requests.  This makes it possible to use nncc to script telnet sessions.
+
+     --UU      Use UNIX-domain sockets.  Cannot be used together with --FF or --xx.
+
+     --uu      Use UDP instead of TCP.  Cannot be used together with --xx.  For UNIX-domain sockets, use a datagram socket instead of a stream
+             socket.  If a UNIX-domain socket is used, a temporary receiving socket is created in _/_t_m_p unless the --ss flag is given.
+
+     --VV _r_t_a_b_l_e
+             Set the routing table to be used.
+
+     --vv      Produce more verbose output.
+
+     --WW _r_e_c_v_l_i_m_i_t
+             Terminate after receiving _r_e_c_v_l_i_m_i_t packets from the network.
+
+     --ww _t_i_m_e_o_u_t
+             Connections which cannot be established or are idle timeout after _t_i_m_e_o_u_t seconds.  The --ww flag has no effect on the --ll option, i.e.
+             nncc will listen forever for a connection, with or without the --ww flag.  The default is no timeout.
+
+     --XX _p_r_o_x_y___p_r_o_t_o_c_o_l
+             Use _p_r_o_x_y___p_r_o_t_o_c_o_l when talking to the proxy server.  Supported protocols are 44 (SOCKS v.4), 55 (SOCKS v.5) and ccoonnnneecctt (HTTPS
+             proxy).  If the protocol is not specified, SOCKS version 5 is used.
+
+     --xx _p_r_o_x_y___a_d_d_r_e_s_s[:_p_o_r_t]
+             Connect to _d_e_s_t_i_n_a_t_i_o_n using a proxy at _p_r_o_x_y___a_d_d_r_e_s_s and _p_o_r_t.  If _p_o_r_t is not specified, the well-known port for the proxy proto‐
+             col is used (1080 for SOCKS, 3128 for HTTPS).  An IPv6 address can be specified unambiguously by enclosing _p_r_o_x_y___a_d_d_r_e_s_s in square
+             brackets.  A proxy cannot be used with any of the options --llssuuUU.
+
+     --ZZ      DCCP mode.
+
+     --zz      Only scan for listening daemons, without sending any data to them.  Cannot be used together with --ll.
+
+     _d_e_s_t_i_n_a_t_i_o_n can be a numerical IP address or a symbolic hostname (unless the --nn option is given).  In general, a destination must be speci‐
+     fied, unless the --ll option is given (in which case the local host is used).  For UNIX-domain sockets, a destination is required and is the
+     socket path to connect to (or listen on if the --ll option is given).
+
+     _p_o_r_t can be specified as a numeric port number or as a service name.  Port ranges may be specified as numeric port numbers of the form
+     _n_n-_m_m.  In general, a destination port must be specified, unless the --UU option is given.
+
+CCLLIIEENNTT//SSEERRVVEERR MMOODDEELL
+     It is quite simple to build a very basic client/server model using nncc.  On one console, start nncc listening on a specific port for a connec‐
+     tion.  For example:
+
+           $ nc -l 1234
+
+     nncc is now listening on port 1234 for a connection.  On a second console (or a second machine), connect to the machine and port being lis‐
+     tened on:
+
+           $ nc 127.0.0.1 1234
+
+     There should now be a connection between the ports.  Anything typed at the second console will be concatenated to the first, and vice-versa.
+     After the connection has been set up, nncc does not really care which side is being used as a ‘server’ and which side is being used as a
+     ‘client’.  The connection may be terminated using an EOF (‘^D’).
+
+     There is no --cc or --ee option in this netcat, but you still can execute a command after connection being established by redirecting file de‐
+     scriptors. Be cautious here because opening a port and let anyone connected execute arbitrary command on your site is DANGEROUS. If you re‐
+     ally need to do this, here is an example:
+
+     On ‘server’ side:
+
+           $ rm -f /tmp/f; mkfifo /tmp/f
+           $ cat /tmp/f | /bin/sh -i 2>&1 | nc -l 127.0.0.1 1234 > /tmp/f
+
+     On ‘client’ side:
+
+           $ nc host.example.com 1234
+           $ (shell prompt from host.example.com)
+
+     By doing this, you create a fifo at /tmp/f and make nc listen at port 1234 of address 127.0.0.1 on ‘server’ side, when a ‘client’ estab‐
+     lishes a connection successfully to that port, /bin/sh gets executed on ‘server’ side and the shell prompt is given to ‘client’ side.
+
+     When connection is terminated, nncc quits as well. Use --kk if you want it keep listening, but if the command quits this option won't restart it
+     or keep nncc running. Also don't forget to remove the file descriptor once you don't need it anymore:
+
+           $ rm -f /tmp/f
+
+DDAATTAA TTRRAANNSSFFEERR
+     The example in the previous section can be expanded to build a basic data transfer model.  Any information input into one end of the connec‐
+     tion will be output to the other end, and input and output can be easily captured in order to emulate file transfer.
+
+     Start by using nncc to listen on a specific port, with output captured into a file:
+
+           $ nc -l 1234 > filename.out
+
+     Using a second machine, connect to the listening nncc process, feeding it the file which is to be transferred:
+
+           $ nc -N host.example.com 1234 < filename.in
+
+     After the file has been transferred, the connection will close automatically.
+
+TTAALLKKIINNGG TTOO SSEERRVVEERRSS
+     It is sometimes useful to talk to servers “by hand” rather than through a user interface.  It can aid in troubleshooting, when it might be
+     necessary to verify what data a server is sending in response to commands issued by the client.  For example, to retrieve the home page of a
+     web site:
+
+           $ printf "GET / HTTP/1.0\r\n\r\n" | nc host.example.com 80
+
+     Note that this also displays the headers sent by the web server.  They can be filtered, using a tool such as sed(1), if necessary.
+
+     More complicated examples can be built up when the user knows the format of requests required by the server.  As another example, an email
+     may be submitted to an SMTP server using:
+
+           $ nc [-C] localhost 25 << EOF
+           HELO host.example.com
+           MAIL FROM:<user@host.example.com>
+           RCPT TO:<user2@host.example.com>
+           DATA
+           Body of email.
+           .
+           QUIT
+           EOF
+
+PPOORRTT SSCCAANNNNIINNGG
+     It may be useful to know which ports are open and running services on a target machine.  The --zz flag can be used to tell nncc to report open
+     ports, rather than initiate a connection. Usually it's useful to turn on verbose output to stderr by use this option in conjunction with --vv
+     option.
+
+     For example:
+
+           $ nc -zv host.example.com 20-30
+           Connection to host.example.com 22 port [tcp/ssh] succeeded!
+           Connection to host.example.com 25 port [tcp/smtp] succeeded!
+
+     The port range was specified to limit the search to ports 20 - 30, and is scanned by increasing order (unless the --rr flag is set).
+
+     You can also specify a list of ports to scan, for example:
+
+           $ nc -zv host.example.com http 20 22-23
+           nc: connect to host.example.com 80 (tcp) failed: Connection refused
+           nc: connect to host.example.com 20 (tcp) failed: Connection refused
+           Connection to host.example.com port [tcp/ssh] succeeded!
+           nc: connect to host.example.com 23 (tcp) failed: Connection refused
+
+     The ports are scanned by the order you given (unless the --rr flag is set).
+
+     Alternatively, it might be useful to know which server software is running, and which versions.  This information is often contained within
+     the greeting banners.  In order to retrieve these, it is necessary to first make a connection, and then break the connection when the banner
+     has been retrieved.  This can be accomplished by specifying a small timeout with the --ww flag, or perhaps by issuing a "QUIT" command to the
+     server:
+
+           $ echo "QUIT" | nc host.example.com 20-30
+           SSH-1.99-OpenSSH_3.6.1p2
+           Protocol mismatch.
+           220 host.example.com IMS SMTP Receiver Version 0.84 Ready
+
+EEXXAAMMPPLLEESS
+     Open a TCP connection to port 42 of host.example.com, using port 31337 as the source port, with a timeout of 5 seconds:
+
+           $ nc -p 31337 -w 5 host.example.com 42
+
+     Open a UDP connection to port 53 of host.example.com:
+
+           $ nc -u host.example.com 53
+
+     Open a TCP connection to port 42 of host.example.com using 10.1.2.3 as the IP for the local end of the connection:
+
+           $ nc -s 10.1.2.3 host.example.com 42
+
+     Create and listen on a UNIX-domain stream socket:
+
+           $ nc -lU /var/tmp/dsocket
+
+     Connect to port 42 of host.example.com via an HTTP proxy at 10.2.3.4, port 8080.  This example could also be used by ssh(1); see the
+     PPrrooxxyyCCoommmmaanndd directive in ssh_config(5) for more information.
+
+           $ nc -x10.2.3.4:8080 -Xconnect host.example.com 42
+
+     The same example again, this time enabling proxy authentication with username “ruser” if the proxy requires it:
+
+           $ nc -x10.2.3.4:8080 -Xconnect -Pruser host.example.com 42
+
+SSEEEE AALLSSOO
+     cat(1), ssh(1)
+
+AAUUTTHHOORRSS
+     Original implementation by *Hobbit* <_h_o_b_b_i_t_@_a_v_i_a_n_._o_r_g>.
+     Rewritten with IPv6 support by
+     Eric Jackson <_e_r_i_c_j_@_m_o_n_k_e_y_._o_r_g>.
+     Modified for Debian port by Aron Xu ⟨aron@debian.org⟩.
+
+CCAAVVEEAATTSS
+     UDP port scans using the --uuzz combination of flags will always report success irrespective of the target machine's state.  However, in con‐
+     junction with a traffic sniffer either on the target machine or an intermediary device, the --uuzz combination could be useful for communica‐
+     tions diagnostics.  Note that the amount of UDP traffic generated may be limited either due to hardware resources and/or configuration set‐
+     tings.
+
+BSD                                                             December 27, 2018                                                             BSD
