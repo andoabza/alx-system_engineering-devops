@@ -1,3 +1,5 @@
+#!/usr/bin/pup
+# create file in tmp/school
 file { '/tmp/school':
   ensure  => file,
   path    => '/tmp/school',
