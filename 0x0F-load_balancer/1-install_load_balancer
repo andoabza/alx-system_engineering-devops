@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
-# install haproxy
-apt-get update
-apt-get install -y haproxy
+# Installs and setup haproxy
 
-echo '
-frontend main
-    bind *:80
-    mode http
-    default_backend webservers
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:vbernat/haproxy-1.8
+apt-get -y update
+apt-get install -y haproxy=1.8.\*
 
-backend webservers
-    mode http
-    balance roundrobin
-    option httpchk HEAD / HTTP/1.1\r\nHost:localhost
+echo "ENABLED=1" > /etc/default/haproxy
 
-    server web-01 [STUDENT_ID]-web-01 check
-    server web-02 [STUDENT_ID]-web-02 check
-' > /etc/haproxy/haproxy.cfg
+# Listen to web1 and web2 servers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+echo "
+   listen load_balancer
+   bind *:80
+   mode http
+   balance roundrobin
+   option httpclose
+   option forwardfor
+   server 17272-web-01 44.200.83.158:80 check
+   server 17272-web-02 3.237.16.226:80 check
+" >> /etc/haproxy/haproxy.cfg
 
-sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
-sudo service haproxy restart
+service haproxy start
