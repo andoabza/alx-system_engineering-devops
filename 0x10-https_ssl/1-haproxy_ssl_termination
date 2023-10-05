@@ -1,24 +1,40 @@
 global
-       ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:+!aNULL:!MD5:!DSS
-       ssl-default-bind-options no-sslv3
+    log     /dev/log local0
+    maxconn 2048
+    user    haproxy
+    group   haproxy
+    tune.ssl.default-dh-param 2048
 
-   defaults
-       timeout connect 5s
-       timeout client 50s
-       timeout server 50s
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    retries 3
+    option  redispatch
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
+    option  forwardfor
+    option  http-server-close
 
-   frontend http
-       bind *:80
+frontend www-http
+    bind   0.0.0.0:80
+    reqadd X-Forwarded-Proto:\ http
+    default_backend www-backend
 
-       acl is_ssl req.ssl_hello_type 1
-       use_backend https if is_ssl
+frontend www-https
+    bind   0.0.0.0:443 ssl crt /etc/haproxy/certs/www.bdbnb.site.pem
+    reqadd X-Forwarded-Proto:\ https
+    acl    letsencrypt-acl path_beg /.well-known/acme-challenge/
+    use_backend letsencrypt-backend if letsencrypt-acl
+    default_backend www-backend
 
-   frontend https
-       bind *:443 ssl crt /etc/letsencrypt/live/www.andamlak.tech/fullchain.pem
+backend www-backend
+    balance  roundrobin
+    redirect scheme https if !{ ssl_fc }
+    server 74320-web-01 54.174.170.168:80 check
+    server 74320-web-02 54.90.32.242:80 check
 
-       reqadd X-Forwarded-Proto:\ https
-       default_backend web-server
-
-   backend web-server
-       redirect scheme https if !{ ssl_fc }
-       server www-server 127.0.0.1:8080" > /etc/haproxy/haproxy.cfg
+backend letsencrypt-backend
+    server letsencrypt 127.0.0.1:54321
