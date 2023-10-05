@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Function to retrieve and display DNS information for a subdomain
+get_dns_info() {
+    local subdomain="$1"
+    local domain="$2"
+    local record_type="$3"
+    
+    local info=$(dig +short "$subdomain.$domain" "$record_type")
+    
+    echo "The subdomain $subdomain is a $record_type record and points to $info"
+}
+
+domain="$1"
+subdomain="$2"
+
+if [ -n "$domain" ] && [ -z "$subdomain" ]; then
+    get_dns_info "www" "$domain" "A"
+    get_dns_info "lb-01" "$domain" "A"
+    get_dns_info "web-01" "$domain" "A"
+    get_dns_info "web-02" "$domain" "A"
+fi
+
+if [ -n "$domain" ] && [ -n "$subdomain" ]; then
+    get_dns_info "$subdomain" "$domain" "A"
+fi
+
