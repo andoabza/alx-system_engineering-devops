@@ -5,8 +5,8 @@ get_dns_info() {
     local domain="$2"
     local record_type="$3"
     
-    #local info=$(dig +short "$subdomain.$domain" "$record_type")
-    local info=$(dig "$subdomain.$domain" | grep -A1 'ANSWER SECTION:' | awk '{print $5}')
+    local info=$(dig +short "$subdomain.$domain" "$record_type" | awk '{print $0}')
+    #local info=$(dig "$subdomain.$domain" | grep -A1 'ANSWER SECTION:' | awk '{print $5}')
     echo "The subdomain $subdomain is a $record_type record and points to $info"
 }
 
