@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# a script that configure haproxy
+
+sudo apt-get update
+sudo apt-get install certbot
+sudo certbot certonly --standalone -d www.andamlak.tech
+sudo service haproxy restart
+echo "global
+       ssl-default-bind-ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:RSA+AESGCM:RSA+AES:+!aNULL:!MD5:!DSS
+       ssl-default-bind-options no-sslv3
+
+   defaults
+       timeout connect 5s
+       timeout client 50s
+       timeout server 50s
+
+   frontend http
+       bind *:80
+
+       acl is_ssl req.ssl_hello_type 1
+       use_backend https if is_ssl
+
+   frontend https
+       bind *:443 ssl crt /etc/letsencrypt/live/www.andamlak.tech/fullchain.pem
+
+       reqadd X-Forwarded-Proto:\ https
+       default_backend web-server
+
+   backend web-server
+       redirect scheme https if !{ ssl_fc }
+       server www-server 127.0.0.1:8080" > /etc/haproxy/haproxy.cfg
