@@ -1,0 +1,1 @@
+udo ufw allow 8080 tcp from any to port 80
