@@ -1,1 +1,1 @@
-udo ufw allow 8080 tcp from any to port 80
+sudo ufw route allow proto tcp from any to any port 8080
