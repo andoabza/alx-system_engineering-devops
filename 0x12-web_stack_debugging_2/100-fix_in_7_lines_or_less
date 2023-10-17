@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# a script that fix task #1
+var = 1
+var = 2
+var = "$1"
+sudo -u var whoami
