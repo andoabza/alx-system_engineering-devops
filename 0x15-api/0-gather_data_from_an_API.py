@@ -2,32 +2,42 @@
 """
 Using https://jsonplaceholder.typicode.com
 returns info about employee TODO progress
-Implemented using recursion
+
+This script need some more thinking...for later
+
 """
-import re
 import requests
-import sys
+from sys import argv
 
 
-API = "https://jsonplaceholder.typicode.com"
-"""REST API url"""
+def request_data():
+    """Requests employees data and TODO"""
+    employees = requests.get("https://jsonplaceholder.typicode.com/users")
+    EMPLOYEE_NAME = ""
+    for employee in employees.json():
+        if employee.get("id") == int(argv[1]):
+            EMPLOYEE_NAME = employee.get("name")
+            break
+    NUMBER_OF_DONE_TASKS = 0
+    TOTAL_NUMBER_OF_TASKS = 0
+    TASK_TITLE = []
+
+    tasks = requests.get("https://jsonplaceholder.typicode.com/todos")
+    for task in tasks.json():
+        if task.get("userId") == int(argv[1]):
+            TOTAL_NUMBER_OF_TASKS += 1
+            if task.get("completed") is True:
+                NUMBER_OF_DONE_TASKS += 1
+                TASK_TITLE.append(task.get("title"))
+
+    print(
+        f"Employee {EMPLOYEE_NAME} is done with"
+        f" {NUMBER_OF_DONE_TASKS}/{TOTAL_NUMBER_OF_TASKS}:"
+        )
+
+    for task in TASK_TITLE:
+        print(f"\t {task}")
 
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        if re.fullmatch(r'\d+', sys.argv[1]):
-            id = int(sys.argv[1])
-            user_res = requests.get('{}/users/{}'.format(API, id)).json()
-            todos_res = requests.get('{}/todos'.format(API)).json()
-            user_name = user_res.get('name')
-            todos = list(filter(lambda x: x.get('userId') == id, todos_res))
-            todos_done = list(filter(lambda x: x.get('completed'), todos))
-            print(
-                'Employee {} is done with tasks({}/{}):'.format(
-                    user_name,
-                    len(todos_done),
-                    len(todos)
-                )
-            )
-            for todo_done in todos_done:
-                print('\t {}'.format(todo_done.get('title')))
+if __name__ == "__main__":
+    request_data()
