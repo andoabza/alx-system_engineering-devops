@@ -1,25 +1,18 @@
 #!/usr/bin/python3
-""" a script that save to csv file"""
+"""Exports to-do list information for a given employee ID to CSV format."""
 import csv
 import requests
 import sys
 
 if __name__ == "__main__":
-    employee_id = sys.argv[1]
-    base_url = 'https://jsonplaceholder.typicode.com'
-    employee_url = f'{base_url}/users/{employee_id}'
-    todos_url = f'{base_url}/todos?userId={employee_id}'
+    user_id = sys.argv[1]
+    url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(url + "users/{}".format(user_id)).json()
+    username = user.get("username")
+    todos = requests.get(url + "todos", params={"userId": user_id}).json()
 
-    employee_response = requests.get(employee_url)
-    employee_data = employee_response.json()
-    todos_response = requests.get(todos_url)
-    todos_data = todos_response.json()
-    f = f"{employee_id}.csv"
-
-    with open(f, 'w', newline='') as file:
-        writer = csv.writer(file, quoting=csv.QUOTE_ALL)
-
-        for todo in todos_data:
-            writer.writerow([
-                employee_id, employee_data['username'],
-                todo['completed'], todo['title']])
+    with open("{}.csv".format(user_id), "w", newline="") as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        [writer.writerow(
+            [user_id, username, t.get("completed"), t.get("title")]
+         ) for t in todos]
