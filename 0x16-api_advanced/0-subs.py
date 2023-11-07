@@ -2,6 +2,7 @@
 """ a scriptthat return the number of subscriber of reedit"""
 import requests
 
+
 def number_of_subscribers(subreddit):
     """a function that return number of subscribersd"""
     url = f"https://www.reddit.com/r/{subreddit}/about.json"
